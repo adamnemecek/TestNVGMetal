@@ -606,6 +606,7 @@ static void mtlnvg__vset(NVGvertex* vtx, float x, float y, float u, float v) {
 static void mtlnvg__fill(MNVGcontext* mtl, MNVGcall* call) {
     // Draws shapes.
     const int kIndexBufferOffset = call->indexOffset * mtl.indexSize;
+    [mtl.renderEncoder pushDebugGroup:@"fill"];
 
     [mtl.renderEncoder setCullMode:MTLCullModeNone];
     [mtl.renderEncoder setDepthStencilState:mtl.fillShapeStencilState];
@@ -637,12 +638,16 @@ static void mtlnvg__fill(MNVGcontext* mtl, MNVGcall* call) {
                           vertexStart:call->triangleOffset
                           vertexCount:call->triangleCount];
     [mtl.renderEncoder setDepthStencilState:mtl.defaultStencilState];
+
+    [mtl.renderEncoder popDebugGroup];
 }
 
 static void mtlnvg__convexFill(MNVGcontext* mtl, MNVGcall* call) {
     const int kIndexBufferOffset = call->indexOffset * mtl.indexSize;
     mtlnvg__setUniforms(mtl, call->uniformOffset, call->image);
     [mtl.renderEncoder setRenderPipelineState:mtl.pipelineState];
+    [mtl.renderEncoder pushDebugGroup:@"convexFill"];
+
     if (call->indexCount > 0) {
         [mtl.renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
                                       indexCount:call->indexCount
@@ -657,13 +662,16 @@ static void mtlnvg__convexFill(MNVGcontext* mtl, MNVGcall* call) {
                               vertexStart:call->strokeOffset
                               vertexCount:call->strokeCount];
     }
+    [mtl.renderEncoder popDebugGroup];
 }
 
 static void mtlnvg__stroke(MNVGcontext* mtl, MNVGcall* call) {
+
     if (call->strokeCount <= 0) {
         return;
     }
 
+    [mtl.renderEncoder pushDebugGroup:@"stroke"];
     if (mtl.flags & NVG_STENCIL_STROKES) {
         // Fills the stroke base without overlap.
         mtlnvg__setUniforms(mtl, call->uniformOffset + mtl.fragSize, call->image);
@@ -695,14 +703,17 @@ static void mtlnvg__stroke(MNVGcontext* mtl, MNVGcall* call) {
                               vertexStart:call->strokeOffset
                               vertexCount:call->strokeCount];
     }
+    [mtl.renderEncoder popDebugGroup];
 }
 
 static void mtlnvg__triangles(MNVGcontext* mtl, MNVGcall* call) {
+    [mtl.renderEncoder pushDebugGroup:@"triangles"];
     mtlnvg__setUniforms(mtl, call->uniformOffset, call->image);
     [mtl.renderEncoder setRenderPipelineState:mtl.pipelineState];
     [mtl.renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
                           vertexStart:call->triangleOffset
                           vertexCount:call->triangleCount];
+    [mtl.renderEncoder popDebugGroup];
 }
 
 static void mtlnvg__renderCancel(void* uptr) {
