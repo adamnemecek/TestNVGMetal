@@ -1095,6 +1095,24 @@ static int mtlnvg__renderDeleteTexture(void* uptr, int image) {
     return 0;
 }
 
+void dump_vertex(NVGvertex *v) {
+    printf("vertex: x: %f, y: %f, u: %f, v: %f\n", v->x, v->y, v->u, v->v);
+}
+
+//int first;
+//int count;
+//unsigned char closed;
+//int nbevel;
+//NVGvertex* fill;
+//int nfill;
+//NVGvertex* stroke;
+//int nstroke;
+//int winding;
+//int convex;
+void dump_path(NVGpath *p) {
+
+}
+
 static void mtlnvg__renderFill(void* uptr, NVGpaint* paint,
                                NVGcompositeOperationState compositeOperation,
                                NVGscissor* scissor, float fringe,
@@ -1134,9 +1152,10 @@ static void mtlnvg__renderFill(void* uptr, NVGpaint* paint,
     call->strokeCount = strokeCount - 2;
     NVGvertex* strokeVert = mtl.buffers.verts + strokeVertOffset;
 
-    NVGpath* path = (NVGpath*)&paths[0];
-    for (int i = npaths; i--; ++path) {
+    for (int i = 0; i < npaths; i++) {
+        NVGpath* path = (NVGpath*)&paths[i];
         if (path->nfill > 2) {
+            // buffer.splice(vertOffset, vertexOffset + path->nfill,
             memcpy(&mtl.buffers.verts[vertOffset], path->fill,
                    sizeof(NVGvertex) * path->nfill);
 
@@ -1150,10 +1169,12 @@ static void mtlnvg__renderFill(void* uptr, NVGpaint* paint,
         }
         if (path->nstroke > 0) {
             memcpy(strokeVert, path->stroke, sizeof(NVGvertex));
+//            dump_vertex(path->stroke);
             ++strokeVert;
             memcpy(strokeVert, path->stroke, sizeof(NVGvertex) * path->nstroke);
             strokeVert += path->nstroke;
             memcpy(strokeVert, path->stroke + path->nstroke - 1, sizeof(NVGvertex));
+//            dump_vertex(path->stroke + path->nstroke - 1);
             ++strokeVert;
         }
     }
