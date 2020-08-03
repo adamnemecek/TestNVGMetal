@@ -493,7 +493,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestNVGMetal/TestNVGMetal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 686EDA2T8T;
+				DEVELOPMENT_TEAM = JL8K7LH7KS;
 				INFOPLIST_FILE = TestNVGMetal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -511,7 +511,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestNVGMetal/TestNVGMetal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 686EDA2T8T;
+				DEVELOPMENT_TEAM = JL8K7LH7KS;
 				INFOPLIST_FILE = TestNVGMetal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
